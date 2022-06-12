@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "admin",
+    "password": "admin1234",
+    "database": "db_dana",
+    "host": "db-dana.c2gimdexmaod.us-east-1.rds.amazonaws.com",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "admin",
+    "password": "admin1234",
+    "database": "db_dana",
+    "host": "db-dana.c2gimdexmaod.us-east-1.rds.amazonaws.com",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "admin",
+    "password": "admin1234",
+    "database": "db_dana",
+    "host": "db-dana.c2gimdexmaod.us-east-1.rds.amazonaws.com",
+    "dialect": "mysql"
+  }
+}
