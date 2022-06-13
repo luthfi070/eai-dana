@@ -2,7 +2,13 @@ const express = require("express");
 const app = express();
 const port = 3001;
 const superagent = require("superagent");
-const { datapayment, datapaymentdone } = require("./models/index");
+const {
+  datapayment,
+  datapaymentdone,
+  datatransaksi,
+  datamarketing,
+  datauser,
+} = require("./models/index");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -16,6 +22,7 @@ app.get("/", (req, res) => {
   res.send(data);
 });
 
+//endpoint 1
 app.post("/integrasi-data-payment", async (req, res) => {
   const dataShopee = await superagent.get(
     "https://eai-shopee.herokuapp.com/get-data-shopee"
@@ -41,6 +48,7 @@ app.post("/integrasi-data-payment", async (req, res) => {
   res.send("data berhasil diinput");
 });
 
+//endpoint 2
 app.post("/integrasi-data-payment-done", async (req, res) => {
   let data = await datapayment.findAll({
     attributes: [
@@ -70,6 +78,7 @@ app.post("/integrasi-data-payment-done", async (req, res) => {
   res.send("data berhasil diinput");
 });
 
+//endpoint 3
 app.get("/get-all-payment-done", async (req, res) => {
   let data = await datapaymentdone.findAll({
     attributes: ["id_pembayaran", "status"],
@@ -80,6 +89,59 @@ app.get("/get-all-payment-done", async (req, res) => {
   });
 });
 
-app.listen(process.env.PORT || 3000, "0.0.0.0", () => {
+app.post("/integrasi-data-transaksi", async (req, res) => {
+  //ngambil
+  let data = await datapaymentdone.findAll({
+    attributes: ["kategori", "total_harga", "nama_akun", "nomer_hp"],
+  });
+
+  //ngirim
+  // dimulai dari 0, berhenti sebelum panjang data yaitu 9, dengan cara maju kedepan
+  for (i = 0; i < data.length; i++) {
+    datatransaksi.create({
+      kategori: data[i].kategori,
+      uang_keluar: data[i].total_harga,
+      uang_masuk: 0,
+      nama_user: data[i].nama_akun,
+    });
+  }
+
+  res.send("berhasil dimasukan");
+});
+
+app.post("/integrasi-data-marketing", async (req, res) => {
+  //ngambil
+  let data = await datapaymentdone.findAll({
+    attributes: ["nama_barang", "kategori_barang"],
+  });
+
+  //ngirim
+  for (i = 0; i < data.length; i++) {
+    datamarketing.create({
+      nama_barang: data[i].nama_barang,
+      kategori_barang: data[i].kategori_barang,
+    });
+  }
+
+  res.send("berhasil dimasukan");
+});
+
+app.post("/integrasi-data-user", async (req, res) => {
+  //ngambil
+  let data = await datatransaksi.findAll({
+    attributes: ["uang_keluar"],
+  });
+
+  //ngirim
+  for (i = 0; i < data.length; i++) {
+    datauser.create({
+      dana_shopee: data[i].uang_keluar,
+    });
+  }
+
+  res.send("data berhasil dimasukan");
+});
+
+app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
