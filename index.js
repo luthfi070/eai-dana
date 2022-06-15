@@ -160,11 +160,11 @@ app.post("/integrasi-data-payment-user", async (req, res) => {
 
   let id = 1;
   //ngeupdate
-  for (i = 0; i < dataParsed.data.length; i++) {
+  for (i = 0; i < dataParsed.length; i++) {
     datauser.update(
       {
-        nama_user: dataParsed.data[i].nama_akun,
-        nomer_telepon: dataParsed.data[i].nomer_hp,
+        nama_user: dataParsed[i].nama_akun,
+        nomer_telepon: dataParsed[i].nomer_hp,
       },
       {
         where: {
@@ -251,6 +251,6 @@ app.post("/input-partnership", (req, res) => {
   res.send("data berhasil dimasukan");
 });
 
-app.listen(process.env.PORT || 3001, "0.0.0.0", () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
