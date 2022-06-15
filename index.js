@@ -251,6 +251,6 @@ app.post("/input-partnership", (req, res) => {
   res.send("data berhasil dimasukan");
 });
 
-app.listen(port, () => {
+app.listen(process.env.PORT || 3001, "0.0.0.0", () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
